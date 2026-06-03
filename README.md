@@ -1,4 +1,4 @@
-# Smart Billboard — TP25228
+# Smart Billboard TP25228
 
 A web-based application for designing, customizing, and previewing 3D billboards in real-time.
 
