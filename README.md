@@ -36,6 +36,3 @@ Follow these sequential steps on the Topbar or click **Next →** to design your
   * Click **GENERATE 3D** to render the scene.
   * *3D Interaction:* Left-click and drag to rotate, scroll to zoom, right-click and drag to pan.
   * Click **Save as PNG** to take a screenshot or **Export .glb** to download the 3D model.
-
----
-*Powered by Three.js.*
