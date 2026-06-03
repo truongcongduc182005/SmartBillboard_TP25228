@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Billboard Studio — TP25228</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700;900&family=Barlow+Condensed:wght@400;700;900&family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,700&family=Righteous&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">BILLBOARD STUDIO <em>/ TP25228</em></div>
+  <nav class="steps" id="steps">
+    <div class="sp active" data-s="0" onclick="goStep(0)"><div class="sn">1</div> LAYOUT</div>
+    <div class="sp" data-s="1" onclick="goStep(1)"><div class="sn">2</div> UPLOAD</div>
+    <div class="sp" data-s="2" onclick="goStep(2)"><div class="sn">3</div> EDIT</div>
+    <div class="sp" data-s="3" onclick="goStep(3)"><div class="sn">4</div> SLOGAN</div>
+    <div class="sp" data-s="4" onclick="goStep(4)"><div class="sn">5</div> GENERATE</div>
+  </nav>
+  <div class="top-right">
+    <button class="btn" onclick="resetAll()">↺ Reset</button>
+    <button class="btn pri" id="main-btn" onclick="mainAction()">Next →</button>
+  </div>
+</header>
+
+<div class="main">
+  <aside class="sidebar">
+
+    <!-- STEP 0: Layout -->
+    <div class="panel" id="panel-0">
+      <div class="ptitle"><span>01</span> Image Count</div>
+      <div class="g3" style="margin-bottom:14px">
+        <div class="card active" data-count="1" onclick="setImageCount(this)">
+          <div style="font-size:22px">▣</div>
+          <span class="card-lbl">1 Image</span>
+        </div>
+        <div class="card" data-count="2" onclick="setImageCount(this)">
+          <div style="font-size:22px">⊞</div>
+          <span class="card-lbl">2 Images</span>
+        </div>
+        <div class="card" data-count="4" onclick="setImageCount(this)">
+          <div style="font-size:22px">⊟</div>
+          <span class="card-lbl">4 Images</span>
+        </div>
+      </div>
+
+      <div class="ptitle"><span>02</span> Billboard Layout</div>
+      <div class="g3" id="layout-grid">
+        <!-- injected by JS based on count -->
+      </div>
+
+      <div class="ptitle" style="margin-top:12px"><span>03</span> Frame Ratio</div>
+      <div class="g3">
+        <div class="card" data-rw="16" data-rh="9" onclick="setRatio(this)"><div class="rvis" style="width:40px;height:22px"></div><span class="card-lbl">16:9</span></div>
+        <div class="card active" data-rw="3" data-rh="1" onclick="setRatio(this)"><div class="rvis" style="width:42px;height:14px"></div><span class="card-lbl">3:1 ★</span></div>
+        <div class="card" data-rw="4" data-rh="3" onclick="setRatio(this)"><div class="rvis" style="width:36px;height:27px"></div><span class="card-lbl">4:3</span></div>
+        <div class="card" data-rw="3" data-rh="2" onclick="setRatio(this)"><div class="rvis" style="width:39px;height:26px"></div><span class="card-lbl">3:2</span></div>
+        <div class="card" data-rw="2" data-rh="1" onclick="setRatio(this)"><div class="rvis" style="width:40px;height:20px"></div><span class="card-lbl">2:1</span></div>
+        <div class="card" data-rw="1" data-rh="1" onclick="setRatio(this)"><div class="rvis" style="width:28px;height:28px"></div><span class="card-lbl">1:1</span></div>
+      </div>
+
+      <div class="ptitle" style="margin-top:12px"><span>04</span> Frame Material</div>
+      <div class="crow">
+        <span class="clbl">Material</span>
+        <select class="tinput" id="frame-mat" onchange="updatePreview()" style="font-size:10px;padding:5px 8px">
+          <option value="gunmetal">Gunmetal</option>
+          <option value="carbon">Carbon Black</option>
+          <option value="gold">Gold</option>
+          <option value="chrome">Chrome</option>
+          <option value="matte">Matte White</option>
+        </select>
+      </div>
+      <div class="crow">
+        <span class="clbl">LED Glow</span>
+        <input type="range" class="slider" id="led-glow" min="0" max="100" value="50" oninput="syncVal('led-glow','val-led');updatePreview()"/>
+        <span class="cval" id="val-led">50</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: Upload -->
+    <div class="panel" id="panel-1" style="display:none">
+      <div class="ptitle"><span>02</span> Upload Images</div>
+      <div class="upload-grid" id="upload-grid">
+        <!-- injected dynamically -->
+      </div>
+      <div style="font-family:var(--mono);font-size:8.5px;color:var(--txt3);line-height:1.9;text-align:center;margin-top:4px">
+        PNG · JPG · WEBP · SVG được hỗ trợ
+      </div>
+    </div>
+
+    <!-- STEP 2: Edit Image -->
+    <div class="panel" id="panel-2" style="display:none">
+      <div class="ptitle"><span>03</span> Adjustments</div>
+      <div class="crow"><span class="clbl">Brightness</span><input type="range" class="slider" id="adj-bri" min="-100" max="100" value="0" oninput="applyAdj()"/><span class="cval" id="val-bri">0</span></div>
+      <div class="crow"><span class="clbl">Contrast</span><input type="range" class="slider" id="adj-con" min="-100" max="100" value="0" oninput="applyAdj()"/><span class="cval" id="val-con">0</span></div>
+      <div class="crow"><span class="clbl">Saturation</span><input type="range" class="slider" id="adj-sat" min="-100" max="100" value="0" oninput="applyAdj()"/><span class="cval" id="val-sat">0</span></div>
+      <div class="crow"><span class="clbl">Blur</span><input type="range" class="slider" id="adj-blur" min="0" max="20" value="0" oninput="applyAdj()"/><span class="cval" id="val-blur">0</span></div>
+      <div class="crow"><span class="clbl">Vignette</span><input type="range" class="slider" id="adj-vig" min="0" max="100" value="0" oninput="applyAdj()"/><span class="cval" id="val-vig">0</span></div>
+
+      <div class="ptitle" style="margin-top:12px"><span>—</span> Filter Presets</div>
+      <div class="fgchips" id="filter-grid"></div>
+
+      <div style="display:flex;gap:6px;margin-top:10px">
+        <button class="btn" style="flex:1;font-size:9px" onclick="resetAdj()">↺ Reset</button>
+        <button class="btn" style="flex:1;font-size:9px;border-color:var(--accent);color:var(--accent)" onclick="updatePreview()">✓ Apply</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Slogan -->
+    <div class="panel" id="panel-3" style="display:none">
+      <div class="ptitle"><span>04</span> Slogan Text</div>
+      <textarea class="tinput" id="slogan-txt" rows="3" placeholder="YOUR BRAND&#10;YOUR STORY." oninput="updatePreview()">YOUR BRAND
+YOUR STORY.</textarea>
+
+      <div class="ptitle" style="margin-top:12px"><span>—</span> Font</div>
+      <div class="fgrid">
+        <div class="fcard active" data-font="'Bebas Neue',cursive" onclick="setFont(this)"><div class="fprev" style="font-family:'Bebas Neue',cursive">Ag</div><div class="fname">BEBAS</div></div>
+        <div class="fcard" data-font="'Playfair Display',serif" onclick="setFont(this)"><div class="fprev" style="font-family:'Playfair Display',serif">Ag</div><div class="fname">PLAYFAIR</div></div>
+        <div class="fcard" data-font="'Barlow Condensed',sans-serif" onclick="setFont(this)"><div class="fprev" style="font-family:'Barlow Condensed',sans-serif;font-weight:700">Ag</div><div class="fname">BARLOW</div></div>
+        <div class="fcard" data-font="'Orbitron',sans-serif" onclick="setFont(this)"><div class="fprev" style="font-family:'Orbitron',sans-serif;font-size:13px">Ag</div><div class="fname">ORBITRON</div></div>
+        <div class="fcard" data-font="'Righteous',cursive" onclick="setFont(this)"><div class="fprev" style="font-family:'Righteous',cursive">Ag</div><div class="fname">RIGHTEOUS</div></div>
+        <div class="fcard" data-font="'Share Tech Mono',monospace" onclick="setFont(this)"><div class="fprev" style="font-family:'Share Tech Mono',monospace;font-size:13px">Ag</div><div class="fname">MONO</div></div>
+      </div>
+
+      <div class="crow"><span class="clbl">Size</span><input type="range" class="slider" id="s-size" min="10" max="90" value="32" oninput="syncVal('s-size','val-ssize');updatePreview()"/><span class="cval" id="val-ssize">32</span></div>
+      <div class="crow"><span class="clbl">BG Opacity</span><input type="range" class="slider" id="s-bgop" min="0" max="100" value="55" oninput="syncVal('s-bgop','val-sbgop');updatePreview()"/><span class="cval" id="val-sbgop">55</span></div>
+
+      <div class="ptitle" style="margin-top:10px"><span>—</span> Text Color</div>
+      <div class="srow">
+        <div class="sw active" style="background:#fff" onclick="setSloganClr('#fff',this)"></div>
+        <div class="sw" style="background:#000;border-color:var(--line2)" onclick="setSloganClr('#000',this)"></div>
+        <div class="sw" style="background:#00d9f5" onclick="setSloganClr('#00d9f5',this)"></div>
+        <div class="sw" style="background:#f5c842" onclick="setSloganClr('#f5c842',this)"></div>
+        <div class="sw" style="background:#ff3f6c" onclick="setSloganClr('#ff3f6c',this)"></div>
+        <div class="sw" style="background:#00f59d" onclick="setSloganClr('#00f59d',this)"></div>
+        <div class="sw sw-custom"><input type="color" id="slogan-cpick" value="#ffffff" oninput="setSloganClr(this.value,null)"/></div>
+      </div>
+
+      <div class="ptitle" style="margin-top:12px"><span>—</span> Position</div>
+      <div class="pgrid">
+        <div class="pbtn" data-pos="top-left"    onclick="setPos(this)">↖</div>
+        <div class="pbtn active" data-pos="top-center" onclick="setPos(this)">↑</div>
+        <div class="pbtn" data-pos="top-right"   onclick="setPos(this)">↗</div>
+        <div class="pbtn" data-pos="mid-left"    onclick="setPos(this)">←</div>
+        <div class="pbtn" data-pos="mid-center"  onclick="setPos(this)">·</div>
+        <div class="pbtn" data-pos="mid-right"   onclick="setPos(this)">→</div>
+        <div class="pbtn" data-pos="bot-left"    onclick="setPos(this)">↙</div>
+        <div class="pbtn" data-pos="bot-center"  onclick="setPos(this)">↓</div>
+        <div class="pbtn" data-pos="bot-right"   onclick="setPos(this)">↘</div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Generate + Env -->
+    <div class="panel" id="panel-4" style="display:none">
+      <div class="ptitle"><span>05</span> Environment</div>
+      <div class="g2" style="margin-bottom:12px">
+        <div class="ecard active" data-env="night"   onclick="setEnv(this)"><span class="eicon">🌃</span><span class="elbl">Night City</span></div>
+        <div class="ecard" data-env="golden"  onclick="setEnv(this)"><span class="eicon">🌅</span><span class="elbl">Golden Hour</span></div>
+        <div class="ecard" data-env="studio"  onclick="setEnv(this)"><span class="eicon">💡</span><span class="elbl">Studio</span></div>
+        <div class="ecard" data-env="outdoor" onclick="setEnv(this)"><span class="eicon">☀️</span><span class="elbl">Outdoor</span></div>
+      </div>
+
+      <div class="crow"><span class="clbl">Intensity</span><input type="range" class="slider" id="env-int" min="20" max="160" value="80" oninput="syncVal('env-int','val-eint');applyEnvLive()"/><span class="cval" id="val-eint">80</span></div>
+      <div class="crow"><span class="clbl">Fog</span><input type="range" class="slider" id="env-fog" min="0" max="100" value="35" oninput="syncVal('env-fog','val-efog');applyEnvLive()"/><span class="cval" id="val-efog">35</span></div>
+
+      <div class="ptitle" style="margin-top:12px"><span>—</span> Background Color</div>
+      <div class="colpick-row" style="margin-bottom:10px">
+        <div class="colswatch" id="bg-swatch" style="background:#04050d">
+          <input type="color" id="bg-cpick" value="#04050d" oninput="onBgColorChange(this.value)"/>
+        </div>
+        <span style="font-family:var(--mono);font-size:9px;color:var(--txt2)">Scene Background</span>
+        <button class="btn" style="font-size:8px;padding:4px 8px;margin-left:auto" onclick="resetBgColor()">Reset</button>
+      </div>
+
+      <div class="ptitle"><span>—</span> Camera</div>
+      <div class="crow">
+        <span class="clbl">Auto Rotate</span>
+        <button class="btn" id="btn-rot" onclick="toggleAutoRot()" style="flex:1;font-size:8.5px;border-color:var(--accent);color:var(--accent)">ON</button>
+      </div>
+      <div class="crow" style="margin-top:2px">
+        <span class="clbl">FOV</span>
+        <input type="range" class="slider" id="cam-fov" min="20" max="80" value="38" oninput="updateFOV()"/>
+        <span class="cval" id="val-fov">38</span>
+      </div>
+      <button class="btn" style="width:100%;margin-top:6px;font-size:8.5px" onclick="resetCamera()">↺ Reset Camera</button>
+
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px">
+        <button class="btn pri" style="width:100%;padding:11px;font-size:11px;letter-spacing:.1em" onclick="doGenerate()">⬡ GENERATE 3D</button>
+        <button class="btn grn" style="width:100%;font-size:9.5px" onclick="saveImg()">↓ Save as PNG</button>
+        <button class="btn" style="width:100%;font-size:9.5px;border-color:var(--gold);color:var(--gold)" onclick="saveBlend()">⬡ Export .glb (Blender)</button>
+      </div>
+    </div>
+
+  </aside>
+
+  <div class="center">
+    <div class="cwrap" id="wrap-2d">
+      <canvas id="cv2d" width="800" height="267"></canvas>
+      <div class="empty" id="empty-state">
+        <div class="empty-icon">◈</div>
+        <div class="empty-txt">Chọn layout và upload ảnh<br>để bắt đầu thiết kế biển quảng cáo</div>
+      </div>
+    </div>
+    <div class="cwrap" id="wrap-3d" style="display:none">
+      <canvas id="cv3d"></canvas>
+      <div class="vhud">
+        <div class="hchip" id="hud-env">🌃 NIGHT CITY</div>
+        <div class="hchip" id="hud-ratio">3:1</div>
+        <div class="hchip" id="hud-fps">— FPS</div>
+      </div>
+      <div class="vhint">DRAG · SCROLL · RIGHT-DRAG</div>
+    </div>
+    <div class="goverlay" id="gen-overlay">
+      <div class="gring"></div>
+      <div class="gtxt" id="gen-txt">INITIALIZING...</div>
+      <div class="gbar-wrap"><div class="gbar" id="gen-bar"></div></div>
+    </div>
+    <div class="bbar">
+      <div class="binfo">
+        <span>LAYOUT <span id="bi-layout">SINGLE</span></span>
+        <span>RATIO <span id="bi-ratio">3:1</span></span>
+        <span>ENV <span id="bi-env">NIGHT</span></span>
+        <span>FONT <span id="bi-font">BEBAS</span></span>
+      </div>
+      <div class="bnav">
+        <button class="btn" onclick="goStep(Math.max(0,currentStep-1))">← Prev</button>
+        <button class="btn pri" onclick="mainAction()">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast">✓</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="web.js"></script>
+</body>
+</html>
