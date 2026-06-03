@@ -1,6 +1,16 @@
-# SmartBillboard_TP25228
+# Smart Billboard — TP25228
 
 A web-based application for designing, customizing, and previewing 3D billboards in real-time.
+
+## Installation & Setup
+
+Before designing, follow these simple steps to run the project locally:
+
+1. **Download:** Click the download button on GitHub to get the project as a `.zip` file.
+2. **Extract:** Unzip the downloaded folder on your computer.
+3. **Run:** Open the extracted folder and double-click the `index.html` file to launch the app directly in your web browser.
+
+---
 
 ## Workflow Step-by-Step
 
@@ -26,3 +36,6 @@ Follow these sequential steps on the Topbar or click **Next →** to design your
   * Click **GENERATE 3D** to render the scene.
   * *3D Interaction:* Left-click and drag to rotate, scroll to zoom, right-click and drag to pan.
   * Click **Save as PNG** to take a screenshot or **Export .glb** to download the 3D model.
+
+---
+*Powered by Three.js.*
